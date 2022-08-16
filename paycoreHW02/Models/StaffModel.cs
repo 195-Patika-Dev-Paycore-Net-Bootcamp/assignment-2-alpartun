@@ -23,6 +23,8 @@ public class StaffModel
     public string DateOfBirth { get; set; }
     
     [Required(ErrorMessage = "Email is required.")]
+    [EmailAddress(ErrorMessage = "Email is invalid.")]
+    [Email]
     public string Email { get; set; }
     
     [Required(ErrorMessage = "PhoneNumber is required.")]
