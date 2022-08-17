@@ -8,70 +8,85 @@ namespace paycoreHW02.Controllers;
 
 public class StaffController : ControllerBase
 {
-    static List<Staff> staffList = new List<Staff>();
-    
+    //StaffList
+    private static  List<Staff> StaffList = new List<Staff>();
+    // Constructor
     public StaffController()
     {
 
     }
-    // GET
-    [HttpGet("Get")]
+    // Get all Staffs in StaffList
+    [HttpGet]
     public IActionResult Get()
     {
-        return Ok(staffList);
+        // Checking StaffList is empty or not. If its not empty then StaffList items will send.
+        return StaffList.Count == 0 ? Ok(new { message = "StaffList is empty" }) : Ok(StaffList);
     }
-    [HttpGet("GetById/{id}")]
+    // Getting Specific Staff via id.
+    [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        var result = staffList.FirstOrDefault(x => x.Id == id);
-        return Ok(result);
+        //Finding our Staff in StaffList.
+        var result = StaffList.FirstOrDefault(x => x.Id == id);
+        // If its not found. Then Staff not exists message send. If its found then Staff will send.
+        return result == null ? Ok(new { message = "Staff not exists." }) : Ok(result);
     }
+    // Post(Create) operation.
     [HttpPost("Post")]
-    public IActionResult Post([FromBody]StaffModel staffModel)
+    public IActionResult Post([FromBody]StaffModel? staffModel)
     {
-        if (staffModel == null) return Ok(new { message = "Error" });
-        
+        // Checking staffModel is null or not. If its null then send message.
+        if (staffModel == null) return Ok(new { message = "Invalid model." });
+        // Creating Staff object
         var item = new Staff
         {
             Id =  staffModel.Id,
-            Name = staffModel.Name,
-            Lastname = staffModel.Lastname,
-            DateOfBirth = staffModel.DateOfBirth,
-            Email = staffModel.Email,
-            PhoneNumber = staffModel.PhoneNumber,
+            Name = staffModel.Name!,
+            Lastname = staffModel.Lastname!,
+            DateOfBirth =  DateTime.Parse(staffModel.DateOfBirth!), //Its validated in an Attribute of DateofBirth 
+            Email = staffModel.Email!,
+            PhoneNumber = staffModel.PhoneNumber!,
             Salary = staffModel.Salary
         };
-
-        staffList.Add(item);
-        return Ok(//new{message = "Staff is added succesfully."}
-                  staffList);
+        // Add our new Staff to list.
+        StaffList.Add(item);
+        return Ok(new{message = "Staff is added successfully."});
     }
+    // Update(edit) operation.
     [HttpPut("Put")]
     public IActionResult Put(int id,[FromBody] StaffModel staffModel)
     {
-        var removeStaff  = staffList.FirstOrDefault(x => x.Id == id);
+        // we are going to check if the given id match or not.
+        var removeStaff  = StaffList.FirstOrDefault(x => x.Id == id);
+        // if its not match then removeStaff is null. We are going to send message.
         if (removeStaff == null) return Ok(new{message = "Staff can not be founded."});
+        // If its not null, create Staff object.
         Staff staff = new Staff
         {
             Id = staffModel.Id,
-            Name = staffModel.Name,
-            Lastname = staffModel.Lastname,
-            DateOfBirth = staffModel.DateOfBirth,
-            Email = staffModel.Email,
-            PhoneNumber = staffModel.PhoneNumber,
+            Name = staffModel.Name!,
+            Lastname = staffModel.Lastname!,
+            DateOfBirth =  DateTime.Parse(staffModel.DateOfBirth!), //Its validated in an Attribute of DateofBirth 
+            Email = staffModel.Email!,
+            PhoneNumber = staffModel.PhoneNumber!,
             Salary = staffModel.Salary
         };
-        staffList.Remove(removeStaff);
-        staffList.Add(staff);
+        // remove our old staff
+        StaffList.Remove(removeStaff);
+        //add our updated staff
+        StaffList.Add(staff);
         return Ok(new{message = $"Staff is changed. {staff}"});
     }
+    // Delete operation.
     [HttpDelete("Delete")]
     public IActionResult Delete(int id)
     {
-        var deleteStaff = staffList.FirstOrDefault(x => x.Id == id);
+        // Looking in list if the given id parameter match or not.
+        var deleteStaff = StaffList.FirstOrDefault(x => x.Id == id);
+        // If deleteStaff is not found in list then message send.
         if (deleteStaff == null) return Ok(new { message = "Staff not found." });
-
-        staffList.Remove(deleteStaff);
-        return Ok(new{message="Deletion is succesfully."});
+        // Deletion of staff in StaffList.
+        StaffList.Remove(deleteStaff);
+        return Ok(new{message="Deletion is successfully."});
     }
 }

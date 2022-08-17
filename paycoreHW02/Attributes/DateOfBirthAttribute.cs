@@ -1,32 +1,38 @@
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace paycoreHW02.Attributes;
 
-public class DateOfBirthAttribute:ValidationAttribute
+public class DateOfBirthAttribute : ValidationAttribute
 {
+    // Max and Min date of births
+    private static readonly DateTime MAX_DATE_OF_BIRTH = new(2002, 10, 10);
+    private static readonly DateTime MIN_DATE_OF_BIRTH = new(1945, 11, 11);
+
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        try
-        {
-            if (value.ToString().Length != 10) return new ValidationResult("Invalid");
-            if (!(value.ToString().Any(x=> char.IsDigit(x) && value.ToString().Contains('-') && !char.IsLetter(x)))) return new ValidationResult("Invalid Date of Birth");
-            string[] text = value.ToString().Split("-");
-
-
-            DateTime date = new DateTime(Convert.ToInt32(text[2]),Convert.ToInt32(text[1]),Convert.ToInt32(text[0]));
-            var max = new DateTime(2002,10,10);
-            var min = new DateTime(1945,11,11);
-            var msg = string.Format($"Please enter a value between {min:MM/dd/yyyy} and {max:MM/dd/yyyy}");
-            if (date < min || date > max)
-                return new ValidationResult(msg);
-            else
-                return ValidationResult.Success;
-            
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return new ValidationResult("Invalid Date of Birth");
-        }
+        // Converting value object to valueString
+        var valueString = value as string;
+        // Checking null or not.
+        if (valueString == null) return ValidationResult.Success;
+        // Using DateTimeTryParseExact method checking the valueString is DateTime format or not.
+        var isValid = DateTime.TryParseExact(
+            valueString,
+            "dd-MM-yyyy", // Turkish DateTime format 
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.None,
+            out var parsedDate // Create our DateTime object named parsedDate.
+        );
+        //If isValid false then send ValidationResult errorMessage.
+        if (!isValid) return new ValidationResult("Invalid date format. Date format must be form in 'dd-MM-yyy'");
+        //Creating msg variable.
+        var msg =
+            $"Please enter a value between {MIN_DATE_OF_BIRTH:dd-MM-yyyy} and {MAX_DATE_OF_BIRTH:dd-MM-yyyy}";
+        //Compare our parsedDate(Staffs DateOfBirth) is between our min and max values.
+        if (parsedDate > MAX_DATE_OF_BIRTH || parsedDate < MIN_DATE_OF_BIRTH)
+            // If its not satisfied then send msg as ValidationResult errorMessage.
+            return new ValidationResult(msg);
+        // Otherwise ValidationResult is succeeded.
+        return ValidationResult.Success;
     }
 }
