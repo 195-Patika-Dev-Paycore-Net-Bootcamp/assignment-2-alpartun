@@ -17,7 +17,7 @@ public class PhoneNumberAttribute : ValidationAttribute
         // Checking length of the phone is valid.
         bool isValidLength = phoneNumberString.Length == 13;
         // Checking after '+90', the whole chars are digit or not
-        bool isDigit = phoneNumberString.Substring(3, phoneNumberString.Length-1).Any(x => char.IsDigit(x));
+        bool isDigit = phoneNumberString.Substring(3).Any(x => char.IsDigit(x));
 
         // Control, using if statement
         if (isValidCode && isValidLength && isDigit)
