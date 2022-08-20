@@ -1,3 +1,5 @@
+using System.Globalization;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using paycoreHW02.Models;
 
@@ -37,13 +39,13 @@ public class StaffController : ControllerBase
     {
         // Checking staffModel is null or not. If its null then send message.
         if (staffModel == null) return Ok(new { message = "Invalid model." });
-        // Creating Staff object
+        
         var item = new Staff
         {
             Id =  staffModel.Id,
             Name = staffModel.Name!,
             Lastname = staffModel.Lastname!,
-            DateOfBirth =  DateTime.Parse(staffModel.DateOfBirth!), //Its validated in an Attribute of DateofBirth 
+            DateOfBirth =  DateTime.ParseExact(staffModel.DateOfBirth!,"dd-MM-yyyy",CultureInfo.InvariantCulture), //Its validated in an Attribute of DateofBirth 
             Email = staffModel.Email!,
             PhoneNumber = staffModel.PhoneNumber!,
             Salary = staffModel.Salary

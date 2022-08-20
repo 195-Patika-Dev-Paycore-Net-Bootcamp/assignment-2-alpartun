@@ -25,3 +25,4 @@
 /Users/aartung/Projects/paycoreHW02/paycoreHW02/obj/Debug/net6.0/paycoreHW02.pdb
 /Users/aartung/Projects/paycoreHW02/paycoreHW02/obj/Debug/net6.0/paycoreHW02.genruntimeconfig.cache
 /Users/aartung/Projects/paycoreHW02/paycoreHW02/obj/Debug/net6.0/ref/paycoreHW02.dll
+/Users/aartung/Projects/paycoreHW02/paycoreHW02/bin/Debug/net6.0/FluentValidation.dll

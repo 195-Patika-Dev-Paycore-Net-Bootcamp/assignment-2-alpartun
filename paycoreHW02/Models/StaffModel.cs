@@ -33,6 +33,7 @@ public class StaffModel
     
     [Required(ErrorMessage = "PhoneNumber is required.")]
     //[RegularExpression(pattern:"^[+]+[90][0-9]{11}")]
+    [PhoneNumber]
     public string? PhoneNumber { get; set; }
     
     [Required(ErrorMessage = "Salary is required.")]
