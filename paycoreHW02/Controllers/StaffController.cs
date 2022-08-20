@@ -77,7 +77,7 @@ public class StaffController : ControllerBase
         StaffList.Remove(removeStaff);
         //add our updated staff
         StaffList.Add(staff);
-        return Ok(new{message = $"Staff is changed. {staff}"});
+        return Ok(new{message = $"Staff is changed."});
     }
     // Delete operation.
     [HttpDelete("Delete")]
